@@ -1,0 +1,31 @@
+{
+  "name": "appium-instruments",
+  "version": "0.0.0",
+  "description": "IOS Instruments + instruments-without-delay launcher used by Appium",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/appium/appium-instruments.git"
+  },
+  "keywords": [
+    "appium",
+    "instruments"
+  ],
+  "author": "appium committers",
+  "license": "LICENSE",
+  "bugs": {
+    "url": "https://github.com/appium/appium-instruments/issues"
+  },
+  "homepage": "https://github.com/appium/appium-instruments",
+  "dependencies": {
+    "through": "~2.3.4",
+    "underscore": "~1.6.0",
+    "uuid-js": "~0.7.4",
+    "rimraf": "~2.2.6",
+    "mkdirp": "~0.3.5",
+    "winston": "~0.7.2"
+  }
+}
