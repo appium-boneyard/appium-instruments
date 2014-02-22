@@ -1,4 +1,15 @@
 appium-instruments
 ==================
 
-IOS Instruments + instruments-without-delay launcher used by Appium 
+This module is a wrapper around ios instrument and
+[instruments-without-delay](https://github.com/facebook/instruments-without-delay).
+
+## install
+
+```
+npm install  appium-instruments
+```
+
+## usage
+
+TODO
