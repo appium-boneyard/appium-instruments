@@ -15,7 +15,7 @@
     "instruments"
   ],
   "author": "appium committers",
-  "license": "LICENSE",
+  "license": "apache-2.0",
   "bugs": {
     "url": "https://github.com/appium/appium-instruments/issues"
   },
