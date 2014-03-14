@@ -20,7 +20,7 @@ clone_iwd:
 	git clone https://github.com/facebook/instruments-without-delay.git tmp/iwd
 
 build_iwd:
-ifndef $(TRAVIS)
+ifneq ($(TRAVIS),true)
 	sudo xcode-select -switch "/Applications/Xcode-7.0.app"
 endif
 	cd tmp/iwd && ./build.sh 
