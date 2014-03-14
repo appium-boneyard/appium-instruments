@@ -23,9 +23,13 @@ export_iwd:
 	mkdir -p thirdparty/iwd
 	cp -R tmp/iwd/build/* thirdparty/iwd
 
+test: 
+	./node_modules/.bin/mocha test
+
 .PHONY: \
 	DEFAULT \
 	jshint \
 	iwd \
 	clone_iwd \
-	build_iwd
+	build_iwd \
+	test
