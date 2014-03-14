@@ -8,6 +8,11 @@ jshint:
 
 iwd: clone_iwd build_iwd export_iwd
 
+authorize:
+	sudo DevToolsSecurity --enable
+	sudo security authorizationdb write system.privilege.taskport is-developer
+	sudo chown -R `whoami`: `xcode-select --print-path`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications
+
 clone_iwd:
 	mkdir -p tmp
 	rm -rf tmp/iwd
@@ -32,4 +37,6 @@ test:
 	iwd \
 	clone_iwd \
 	build_iwd \
-	test
+	test \
+	authorize
+	

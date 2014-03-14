@@ -6,10 +6,12 @@ branches:
   only:
     - master
 before_script:
+  - sw_vers -productVersion
+  - xcode-select -p
   - git clone https://github.com/visionmedia/n.git /tmp/n 
   - bash -c 'cd /tmp/n && make install' 
   - n stable
-  - pwd  
+  - node -v
   - npm install
 script:
   - "npm test"
