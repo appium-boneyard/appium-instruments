@@ -8,7 +8,6 @@ branches:
 before_script:
   - git clone https://github.com/visionmedia/n.git /tmp/n 
   - bash -c 'cd /tmp/n && make install' 
-  - echo Node.js version: $(node -v)
   - npm install -g jshint grunt-cli
   - npm install
 script:  
