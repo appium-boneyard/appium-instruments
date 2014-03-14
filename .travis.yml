@@ -7,7 +7,8 @@ branches:
     - master
 before_script:
   - git clone https://github.com/visionmedia/n.git /tmp/n 
-  - bash -c 'cd /tmp/n && make install' 
+  - bash -c 'cd /tmp/n && make install'
+  - n stable
   - npm install -g jshint grunt-cli
   - npm install
 script:  
