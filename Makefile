@@ -34,7 +34,13 @@ export_iwd:
 test: 
 	./node_modules/.bin/mocha test
 
-travis: jshint iwd test
+print_env:
+	@echo OS X version: `sw_vers -productVersion`
+	@echo Xcode version: `xcodebuild build -version`
+	@echo Xcode path: `xcode-select --print-path`
+	@echo Node.js version: `node -v`
+
+travis: jshint print_env authorize iwd test
 
 .PHONY: \
 	DEFAULT \
@@ -44,5 +50,6 @@ travis: jshint iwd test
 	build_iwd \
 	test \
 	authorize \
-	travis
+	travis \
+	print_env
 	
