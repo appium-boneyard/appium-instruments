@@ -7,8 +7,9 @@ branches:
     - master
 before_script:
   - git clone https://github.com/visionmedia/n.git /tmp/n 
-  - 'cd /tmp/n && make install'
+  - bash -c 'cd /tmp/n && make install' 
   - n stable
-script:
   - pwd  
+  - npm install
+script:
   - "npm test"
