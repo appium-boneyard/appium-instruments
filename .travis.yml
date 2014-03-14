@@ -4,5 +4,9 @@ notifications:
 branches:
   only:
     - master
+before_script:
+  - pwd
+  - git clone https://github.com/visionmedia/n.git $$ cd n && make install 
+  - n stable
 script:
   - "npm test"
