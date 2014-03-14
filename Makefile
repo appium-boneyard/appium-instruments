@@ -1,4 +1,5 @@
 current_dir = $(shell pwd)
+
 xcode_path:="$(shell xcode-select -print-path | sed s/\\/Contents\\/Developer//g)"
 
 DEFAULT: jshint
@@ -19,7 +20,9 @@ clone_iwd:
 	git clone https://github.com/facebook/instruments-without-delay.git tmp/iwd
 
 build_iwd:
+ifndef $(TRAVIS)
 	sudo xcode-select -switch "/Applications/Xcode-7.0.app"
+endif
 	cd tmp/iwd && ./build.sh 
 	sudo xcode-select -switch $(xcode_path)
 
@@ -31,6 +34,8 @@ export_iwd:
 test: 
 	./node_modules/.bin/mocha test
 
+travis: jshint iwd test
+
 .PHONY: \
 	DEFAULT \
 	jshint \
@@ -38,5 +43,6 @@ test:
 	clone_iwd \
 	build_iwd \
 	test \
-	authorize
+	authorize \
+	travis
 	

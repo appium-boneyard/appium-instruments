@@ -6,15 +6,15 @@ branches:
   only:
     - master
 before_script:
-  - sw_vers -productVersion
-  - xcode-select -p
+  - echo "OS X version: $(sw_vers -productVersion)"
+  - echo "Xcode version: $(xcodebuild build -version)"
+  - echo "Xcode path: $(xcode-select -p)"
   - git clone https://github.com/visionmedia/n.git /tmp/n 
   - bash -c 'cd /tmp/n && make install' 
   - n stable
-  - node -v
+  - echo "Node.js version: $(node -v)"
+  - npm install -g jshint grunt-cli
   - npm install
   - make authorize
 script:
-  - make jshint
-  - make iwd
-  - make test
+  - make travis
