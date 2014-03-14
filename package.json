@@ -4,7 +4,7 @@
   "description": "IOS Instruments + instruments-without-delay launcher used by Appium",
   "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "sw_vers -productVersion && echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
