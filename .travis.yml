@@ -11,5 +11,4 @@ before_script:
   - npm install -g jshint grunt-cli
   - npm install
 script:  
-  - env
   - make travis
