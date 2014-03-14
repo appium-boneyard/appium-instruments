@@ -1,7 +1,8 @@
-osx_image: mavericks
-language: node_js
+language: objective-c
 notifications:
   email: false
 branches:
   only:
     - master
+script:
+  - "npm test"
