@@ -1,12 +1,14 @@
 language: objective-c
+osx_image: mavericks
 notifications:
   email: false
 branches:
   only:
     - master
 before_script:
-  - pwd
-  - git clone https://github.com/visionmedia/n.git && cd n && make install 
+  - git clone https://github.com/visionmedia/n.git /tmp/n 
+  - 'cd /tmp/n && make install'
   - n stable
 script:
+  - pwd  
   - "npm test"
