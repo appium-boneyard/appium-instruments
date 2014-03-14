@@ -13,5 +13,8 @@ before_script:
   - n stable
   - node -v
   - npm install
+  - make authorize
 script:
-  - "npm test"
+  - make jshint
+  - make iwd
+  - make test
