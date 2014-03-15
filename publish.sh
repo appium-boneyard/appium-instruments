@@ -13,7 +13,7 @@ set -x
 git pull origin master
 TAG=$(npm version $UPGRADE_TYPE)
 echo "Upgrading to version $TAG"
-git commit -a -m $TAG
+git commit -a -m --allow-empty $TAG
 git push --tags origin master
 git push -f origin master:published
 #npm publish
