@@ -5,7 +5,7 @@ if [ -n "$1" ]; then
 else
     UPGRADE_TYPE=patch
 fi
-if [ $(git rev-parse --abbrev-ref HEAD) -ne "master" ]; then
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]; then
     echo 'Error: Not on master.'
     exit 1
 fi
