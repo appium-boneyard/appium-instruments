@@ -5,6 +5,10 @@ if [ -n "$1" ]; then
 else
     UPGRADE_TYPE=patch
 fi
+if [ $(git rev-parse --abbrev-ref HEAD) -ne "master" ]; then
+    echo 'Error: Not on master.'
+    exit 1
+fi
 if [ -n "$(git status -s)" ]; then
     echo 'Error: Uncommited stuff.'
     exit 1
