@@ -23,9 +23,16 @@ export_iwd:
 	mkdir -p thirdparty/iwd
 	cp -R tmp/iwd/build/* thirdparty/iwd
 
+test:
+	echo 'testing'
+
+pre_publish: jshint iwd test
+
 .PHONY: \
 	DEFAULT \
 	jshint \
 	iwd \
 	clone_iwd \
-	build_iwd
+	build_iwd \
+	test \
+	pre_publish

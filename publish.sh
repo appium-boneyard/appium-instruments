@@ -11,6 +11,7 @@ if [ -n "$(git status -s)" ]; then
 fi
 set -x
 git pull origin master
+make pre_publish
 TAG=$(npm version $UPGRADE_TYPE)
 echo "Upgrading to version $TAG"
 git commit -a --allow-empty -m $TAG
