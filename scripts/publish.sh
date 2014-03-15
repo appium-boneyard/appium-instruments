@@ -48,7 +48,10 @@ fi
 set -x
 git pull origin master
 
+set +x
 # just checking
+echo 
+echo 
 yesNo "Was the package built? (y/n)"
 if [ $ret_yesNo != 'y' ]; then
     echo 'Error: package need to be built.'
@@ -64,6 +67,10 @@ if [ $ret_yesNo != 'y' ]; then
     echo 'Error: please push to master first.'
     exit 1
 fi
+echo 
+echo 
+
+set -x
 
 TAG=$(npm version $UPGRADE_TYPE)
 echo "Upgrading to version $TAG"
