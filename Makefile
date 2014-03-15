@@ -42,6 +42,8 @@ print_env:
 
 travis: jshint print_env authorize iwd test
 
+prepublish: jshint iwd test
+
 .PHONY: \
 	DEFAULT \
 	jshint \
@@ -51,5 +53,6 @@ travis: jshint print_env authorize iwd test
 	test \
 	authorize \
 	travis \
+	prepublish \
 	print_env
 	
