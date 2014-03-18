@@ -10,7 +10,7 @@ var Instruments = require('../lib/main').Instruments,
 
 
 var getXcodeTraceTemplatePath = function () {
-  return exec('xcode-select -p').then(function (res) {
+  return exec('xcode-select -print-path').then(function (res) {
     var stdout = res[0];
     return path.resolve(stdout, '..', '..',
       'Contents/Applications/Instruments.app',

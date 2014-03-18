@@ -12,7 +12,7 @@ iwd: clone_iwd build_iwd export_iwd
 authorize:
 	sudo DevToolsSecurity --enable
 	sudo security authorizationdb write system.privilege.taskport is-developer
-	sudo chown -R `whoami`: `xcode-select --print-path`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications
+	sudo chown -R `whoami`: `xcode-select -print-path`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications
 
 clone_iwd:
 	mkdir -p tmp
@@ -37,7 +37,7 @@ test:
 print_env:
 	@echo OS X version: `sw_vers -productVersion`
 	@echo Xcode version: `xcodebuild build -version`
-	@echo Xcode path: `xcode-select --print-path`
+	@echo Xcode path: `xcode-select -print-path`
 	@echo Node.js version: `node -v`
 
 travis: jshint print_env authorize iwd test
