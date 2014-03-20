@@ -21,7 +21,7 @@ clone_iwd:
 
 build_iwd:
 ifndef TRAVIS_BUILD_NUMBER
-	sudo xcode-select -switch "/Applications/Xcode-7.0.app"
+	sudo xcode-select -switch "/Applications/Xcode-7.1.app"
 endif
 	cd tmp/iwd && ./build.sh 
 	sudo xcode-select -switch $(xcode_path)
@@ -44,6 +44,9 @@ travis: jshint print_env authorize iwd test
 
 prepublish: jshint iwd test
 
+clean_trace:
+	rm -rf instrumentscli*.trace
+
 .PHONY: \
 	DEFAULT \
 	jshint \
@@ -54,5 +57,6 @@ prepublish: jshint iwd test
 	authorize \
 	travis \
 	prepublish \
-	print_env
+	print_env \
+	clean_trace
 	
