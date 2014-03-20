@@ -44,6 +44,9 @@ travis: jshint print_env authorize iwd test
 
 prepublish: jshint iwd test
 
+clean_trace:
+	rm -rf instrumentscli*.trace
+
 .PHONY: \
 	DEFAULT \
 	jshint \
@@ -54,5 +57,6 @@ prepublish: jshint iwd test
 	authorize \
 	travis \
 	prepublish \
-	print_env
+	print_env \
+	clean_trace
 	
