@@ -19,16 +19,33 @@ var getXcodeTraceTemplatePath = function () {
   });
 };
 
+var killAllSimulators = function () {
+  if (process.env.KILL_SIMULATORS) {
+    return exec('`which pkill` -f iPhoneSimulator').catch();
+  } else return new Q();
+};
+
+var cleanAllTraces = function () {
+  if (process.env.CLEAN_TRACES) {
+    return exec('`rm -rf instrumentscli*.trace').catch();
+  } else return new Q();
+};
+
 describe('intruments tests', function () {
   var xcodeTraceTemplatePath,
       instruments;
 
   before(function (done) {
-    getXcodeTraceTemplatePath()
-      .then(function (_path) { xcodeTraceTemplatePath = _path; })
-      .nodeify(done);
+    killAllSimulators()
+    .then(getXcodeTraceTemplatePath)
+    .then(function (_path) { xcodeTraceTemplatePath = _path; })
+    .nodeify(done);
   });
 
+  after(function (done) {
+    cleanAllTraces().nodeify(done);
+  });
+  
   it('should start', function (done) {
     console.log(xcodeTraceTemplatePath);
     instruments = new Instruments({
@@ -36,9 +53,9 @@ describe('intruments tests', function () {
       bootstrap: bootstrap,
       template: xcodeTraceTemplatePath,
       withoutDelay: true,
-      xcodeVersion: '5.0.2',
+      xcodeVersion: '5.1',
       webSocket: null,
-      launchTimeout: 45000,
+      launchTimeout: 20000,
       flakeyRetries: true,
       logNoColors: false,
     });
