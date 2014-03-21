@@ -1,21 +1,9 @@
 'use strict';
 
-var Instruments = require('../../lib/main').Instruments,
-    chai = require('chai'),
-    sinon = require('sinon'),
-    sinonChai = require("sinon-chai");
-
-chai.should();
-chai.use(sinonChai);
-
-var asyncCbStub = function (success, delay) {
-  return function (cb) {
-    setTimeout(function () {
-      if (success) cb(); else cb("Simulated crash");
-    }, delay);
-  };
-};
-
+var base = require("./base"),
+    sinon = base.sinon,
+    Instruments = require('../../lib/main').Instruments,
+    asyncCbStub = require("../utils/stubs").asyncCbStub;
 
 describe('Early failures', function () {
   var clock;
