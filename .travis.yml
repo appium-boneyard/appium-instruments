@@ -5,7 +5,7 @@ notifications:
 env:
   matrix:
     - CI_CONFIG=unit
-    - CI_CONFIG=build
+    - CI_CONFIG=functional
 before_script:
   - ./ci/install-node.sh
   - npm install -g jshint grunt-cli
