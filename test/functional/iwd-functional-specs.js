@@ -49,13 +49,13 @@ describe('intruments tests', function () {
   it('should start', function (done) {
     console.log(xcodeTraceTemplatePath);
     instruments = new Instruments({
-      app: path.resolve(__dirname, 'assets/TestApp.app'), // TODO extract app package
+      app: path.resolve(__dirname, "../../", '../../assets/TestApp.app'), // TODO extract app package
       bootstrap: bootstrap,
       template: xcodeTraceTemplatePath,
       withoutDelay: true,
       xcodeVersion: '5.1',
       webSocket: null,
-      launchTimeout: 20000,
+      launchTimeout: 30000,
       flakeyRetries: true,
       logNoColors: false,
     });
