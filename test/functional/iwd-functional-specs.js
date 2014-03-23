@@ -32,6 +32,8 @@ var cleanAllTraces = function () {
 };
 
 describe('intruments tests', function () {
+  this.timeout(90000);
+
   var xcodeTraceTemplatePath,
       instruments;
 
@@ -49,13 +51,13 @@ describe('intruments tests', function () {
   it('should start', function (done) {
     console.log(xcodeTraceTemplatePath);
     instruments = new Instruments({
-      app: path.resolve(__dirname, "../../", '../../assets/TestApp.app'), // TODO extract app package
+      app: path.resolve(__dirname, '../assets/TestApp.app'),
       bootstrap: bootstrap,
       template: xcodeTraceTemplatePath,
       withoutDelay: true,
       xcodeVersion: '5.1',
       webSocket: null,
-      launchTimeout: 30000,
+      launchTimeout: 45000,
       flakeyRetries: true,
       logNoColors: false,
     });
