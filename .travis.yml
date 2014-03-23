@@ -2,13 +2,12 @@ language: objective-c
 osx_image: mavericks
 notifications:
   email: false
-branches:
-  only:
-    - master
+env:
+  matrix:
+    - CI_CONFIG=unit
+    - CI_CONFIG=build
 before_script:
-  - git clone https://github.com/visionmedia/n.git /tmp/n 
-  - bash -c 'cd /tmp/n && make install'
-  - n stable
+  - ./ci/install-node.sh
   - npm install -g jshint grunt-cli
   - npm install
 script:  

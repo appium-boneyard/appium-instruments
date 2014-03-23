@@ -31,8 +31,13 @@ export_iwd:
 	mkdir -p thirdparty/iwd
 	cp -R tmp/iwd/build/* thirdparty/iwd
 
-test: 
-	./node_modules/.bin/mocha test
+test: test_unit test_functional 
+
+test_unit:
+	./node_modules/.bin/mocha test/unit
+
+test_functional:
+	./node_modules/.bin/mocha test/functional
 
 print_env:
 	@echo OS X version: `sw_vers -productVersion`
@@ -40,7 +45,12 @@ print_env:
 	@echo Xcode path: `xcode-select -print-path`
 	@echo Node.js version: `node -v`
 
-travis: jshint print_env authorize iwd test
+travis: 
+ifeq ($(CI_CONFIG),unit)
+	make jshint print_env test_unit
+else ifeq ($(CI_CONFIG),functional)
+	make jshint print_env authorize iwd test_functional
+endif
 
 prepublish: jshint iwd test
 

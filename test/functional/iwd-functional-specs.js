@@ -1,6 +1,6 @@
 'use strict';
 
-var Instruments = require('../lib/main').Instruments,
+var Instruments = require('../../lib/main').Instruments,
     chai = require('chai'),
     should = chai.should(),
     path = require('path'),
