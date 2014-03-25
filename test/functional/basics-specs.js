@@ -23,21 +23,24 @@ describe('intruments tests', function () {
     utils.cleanAllTraces().nodeify(done);
   });
   
+  function newInstrument(timeout) {
+    return new Instruments({
+      app: path.resolve(__dirname, '../assets/TestApp.app'),
+      bootstrap: utils.bootstrap,
+      template: xcodeTraceTemplatePath,
+      withoutDelay: true,
+      xcodeVersion: '5.1',
+      webSocket: null,
+      launchTimeout: timeout,
+      flakeyRetries: true,
+      logNoColors: false,
+    });
+  }
+
   function test(desc, timeout) {
     describe(desc, function () {
       it('should start', function (done) {
-        instruments = new Instruments({
-          app: path.resolve(__dirname, '../assets/TestApp.app'),
-          bootstrap: utils.bootstrap,
-          template: xcodeTraceTemplatePath,
-          withoutDelay: true,
-          xcodeVersion: '5.1',
-          webSocket: null,
-          launchTimeout: timeout,
-          flakeyRetries: true,
-          logNoColors: false,
-        });
-
+        instruments = newInstrument(timeout);
         instruments.start(function (err) {
           should.not.exist(err);
           done();
@@ -52,4 +55,16 @@ describe('intruments tests', function () {
 
   test('regular timeout', process.env.LAUNCH_TIMEOUT || 45000);
   test('smart timeout', {global: process.env.LAUNCH_TIMEOUT || 45000, afterSimLaunch: 5000});
+
+  describe("shutdown without startup", function () {
+    it('should start', function (done) {
+      instruments = newInstrument(process.env.LAUNCH_TIMEOUT || 45000);
+      instruments.shutdown(function (err) {
+        err.should.include('Didn\'t not shutdown within');
+        done();
+      });
+    });
+  });
+
+
 });
