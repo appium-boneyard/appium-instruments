@@ -4,7 +4,7 @@ var base = require('./base'),
     should = base.should,
     Instruments = require('../../lib/main').Instruments;
 
-describe.only('Parsing smart timeouts', function () {
+describe('Parsing smart timeouts', function () {
 
   it('should work when passing timeout as an integer', function (done) {
     var instruments = new Instruments({launchTimeout: 123456});

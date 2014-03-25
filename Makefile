@@ -34,10 +34,10 @@ export_iwd:
 test: test_unit test_functional 
 
 test_unit:
-	./node_modules/.bin/mocha test/unit
+	./node_modules/.bin/mocha --recursive test/unit
 
 test_functional:
-	./node_modules/.bin/mocha test/functional
+	./node_modules/.bin/mocha --recursive test/functional
 
 print_env:
 	@echo OS X version: `sw_vers -productVersion`
