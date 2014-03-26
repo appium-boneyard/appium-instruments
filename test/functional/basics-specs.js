@@ -53,12 +53,12 @@ describe('intruments tests', function () {
     });
   }
 
-  test('regular timeout', process.env.LAUNCH_TIMEOUT || 45000);
-  test('smart timeout', {global: process.env.LAUNCH_TIMEOUT || 45000, afterSimLaunch: 5000});
+  test('regular timeout', 60000);
+  test('smart timeout', {global: 60000, afterSimLaunch: 10000});
 
   describe("shutdown without startup", function () {
     it('should start', function (done) {
-      instruments = newInstrument(process.env.LAUNCH_TIMEOUT || 45000);
+      instruments = newInstrument(60000);
       instruments.shutdown(function (err) {
         err.should.include('Didn\'t not shutdown within');
         done();
