@@ -4,6 +4,7 @@ var base = require('./base'),
     should = base.should,
     utils = require('../utils/instruments-utils'),
     path = require('path'),
+    exec = require('child_process').exec,
     Instruments = require('../../lib/main').Instruments;
 
 describe('intruments tests', function () {
@@ -22,7 +23,7 @@ describe('intruments tests', function () {
   afterEach(function (done) {
     utils.cleanAllTraces().nodeify(done);
   });
-  
+
   function newInstrument(timeout) {
     return new Instruments({
       app: path.resolve(__dirname, '../assets/TestApp.app'),
@@ -66,5 +67,32 @@ describe('intruments tests', function () {
     });
   });
 
+  // works only on 7.1
+  describe("getting devices", function () {
+    it('should get all available devices', function (done) {
+      exec('xcrun --sdk iphonesimulator --show-sdk-version', function (err, stdout) {
+        var onErr = function () {
+          console.error("Couldn't get iOS sdk version, skipping test");
+          done();
+        };
+        if (err) return onErr();
+        var iosVer = parseFloat(stdout);
+        if (typeof iosVer !== "number" || isNaN(iosVer)) {
+          return onErr();
+        }
+        instruments = newInstrument(60000);
+        instruments.getAvailableDevices(function (err, devices) {
+          should.not.exist(err);
+          if (iosVer >= 7.1) {
+            devices.length.should.equal(7);
+            devices.should.contain("iPhone - Simulator - iOS 7.1");
+          } else {
+            devices.length.should.equal(0);
+          }
+          done();
+        });
+      });
+    });
+  });
 
 });
