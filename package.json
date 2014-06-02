@@ -1,6 +1,6 @@
 {
   "name": "appium-instruments",
-  "version": "0.1.21",
+  "version": "1.0.0-beta1",
   "description": "IOS Instruments + instruments-without-delay launcher used by Appium",
   "main": "lib/main.js",
   "scripts": {
@@ -29,17 +29,19 @@
     "through": "~2.3.4",
     "underscore": "~1.6.0",
     "uuid-js": "~0.7.4",
-    "rimraf": "~2.2.6",
-    "mkdirp": "~0.3.5",
-    "winston": "~0.7.2"
+    "rimraf": "~2.2.8",
+    "mkdirp": "~0.5.0",
+    "winston": "~0.7.3"
   },
   "devDependencies": {
-    "mocha": "~1.17.1",
-    "chai": "~1.9.0",
-    "async": "~0.2.10",
-    "appium-uiauto": "0.0.7",
-    "q": "^1.0.1",
-    "sinon": "~1.9.0",
+    "appium-uiauto": "1.0.0-beta1",
+    "async": "~0.9.0",
+    "chai": "~1.9.1",
+    "jscs": "~1.4.5",
+    "jshint": "~2.5.1",
+    "mocha": "~1.20.0",
+    "q": "~1.0.1",
+    "sinon": "~1.10.2",
     "sinon-chai": "~2.5.0"
   }
 }

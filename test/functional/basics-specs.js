@@ -25,27 +25,31 @@ describe('intruments tests', function () {
   });
 
   function newInstrument(timeout) {
-    return new Instruments({
-      app: path.resolve(__dirname, '../assets/TestApp.app'),
-      bootstrap: utils.bootstrap,
-      template: xcodeTraceTemplatePath,
-      withoutDelay: true,
-      xcodeVersion: '5.1',
-      webSocket: null,
-      launchTimeout: timeout,
-      flakeyRetries: true,
-      logNoColors: false,
+    return utils.bootstrap.then(function (bootstrapFile) {
+      return new Instruments({
+        app: path.resolve(__dirname, '../assets/TestApp.app'),
+        bootstrap: bootstrapFile,
+        template: xcodeTraceTemplatePath,
+        withoutDelay: true,
+        xcodeVersion: '5.1',
+        webSocket: null,
+        launchTimeout: timeout,
+        flakeyRetries: true,
+        logNoColors: false,
+      });
     });
   }
 
   function test(desc, timeout) {
     describe(desc, function () {
       it('should start', function (done) {
-        instruments = newInstrument(timeout);
-        instruments.start(function (err) {
-          should.not.exist(err);
-          done();
-        });
+        newInstrument(timeout).then(function (_instruments) {
+          instruments = _instruments;
+          instruments.start(function (err) {
+            should.not.exist(err);
+            done();
+          });
+        }).done();
       });
 
       it('should shutdown', function (done) {
@@ -59,11 +63,14 @@ describe('intruments tests', function () {
 
   describe("shutdown without startup", function () {
     it('should start', function (done) {
-      instruments = newInstrument(60000);
-      instruments.shutdown(function (err) {
-        err.should.include('Didn\'t not shutdown within');
-        done();
-      });
+      newInstrument(60000).then(function (_instruments) {
+        instruments = _instruments;
+        instruments.shutdown(function (err) {
+          err.should.include('Didn\'t not shutdown within');
+          done();
+        });
+      })
+      .done();
     });
   });
 
@@ -80,17 +87,19 @@ describe('intruments tests', function () {
         if (typeof iosVer !== "number" || isNaN(iosVer)) {
           return onErr();
         }
-        instruments = newInstrument(60000);
-        instruments.getAvailableDevices(function (err, devices) {
-          should.not.exist(err);
-          if (iosVer >= 7.1) {
-            devices.length.should.equal(7);
-            devices.should.contain("iPhone - Simulator - iOS 7.1");
-          } else {
-            devices.length.should.equal(0);
-          }
-          done();
-        });
+        newInstrument(60000).then(function (_instruments) {
+          instruments = _instruments;
+          instruments.getAvailableDevices(function (err, devices) {
+            should.not.exist(err);
+            if (iosVer >= 7.1) {
+              devices.length.should.be.above(0);
+              devices.should.contain("iPhone - Simulator - iOS 7.1");
+            } else {
+              devices.length.should.equal(0);
+            }
+            done();
+          });
+        }).done();
       });
     });
   });

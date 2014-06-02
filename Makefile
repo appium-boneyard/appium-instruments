@@ -1,11 +1,15 @@
 current_dir = $(shell pwd)
-
 xcode_path:="$(shell xcode-select -print-path | sed s/\\/Contents\\/Developer//g)"
+JSHINT_BIN=./node_modules/.bin/jshint
+JSCS_BIN=./node_modules/.bin/jscs
 
-DEFAULT: jshint
+DEFAULT: jshint jscs
 
 jshint:
-	jshint lib
+	@$(JSHINT_BIN) lib test
+
+jscs:
+	@$(JSCS_BIN) lib test
 
 iwd: clone_iwd build_iwd export_iwd
 
@@ -47,12 +51,12 @@ print_env:
 
 travis: 
 ifeq ($(CI_CONFIG),unit)
-	make jshint print_env test_unit
+	make jshint jscs print_env test_unit
 else ifeq ($(CI_CONFIG),functional)
-	make jshint print_env authorize iwd test_functional
+	make jshint jscs print_env authorize iwd test_functional
 endif
 
-prepublish: jshint iwd test
+prepublish: jshint jscs iwd test
 
 clean_trace:
 	rm -rf instrumentscli*.trace
@@ -60,6 +64,7 @@ clean_trace:
 .PHONY: \
 	DEFAULT \
 	jshint \
+	jscs \	
 	iwd \
 	clone_iwd \
 	build_iwd \
