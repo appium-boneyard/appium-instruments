@@ -5,7 +5,8 @@ var base = require('./base'),
     utils = require('../utils/instruments-utils'),
     path = require('path'),
     exec = require('child_process').exec,
-    Instruments = require('../../lib/main').Instruments;
+    Instruments = require('../../lib/main').Instruments,
+    Q = require('q');
 
 describe('intruments tests', function () {
   this.timeout(90000);
@@ -25,19 +26,18 @@ describe('intruments tests', function () {
   });
 
   function newInstrument(timeout) {
-    return utils.bootstrap.then(function (bootstrapFile) {
-      return new Instruments({
-        app: path.resolve(__dirname, '../assets/TestApp.app'),
-        bootstrap: bootstrapFile,
-        template: xcodeTraceTemplatePath,
-        withoutDelay: true,
-        xcodeVersion: '5.1',
-        webSocket: null,
-        launchTimeout: timeout,
-        flakeyRetries: true,
-        logNoColors: false,
-      });
+    var instruments = new Instruments({
+      app: path.resolve(__dirname, '../assets/TestApp.app'),
+      bootstrap: utils.bootstrap,
+      template: xcodeTraceTemplatePath,
+      withoutDelay: true,
+      xcodeVersion: '5.1',
+      webSocket: null,
+      launchTimeout: timeout,
+      flakeyRetries: true,
+      logNoColors: false,
     });
+    return new Q(instruments);
   }
 
   function test(desc, timeout) {
@@ -45,13 +45,18 @@ describe('intruments tests', function () {
       it('should start', function (done) {
         newInstrument(timeout).then(function (_instruments) {
           instruments = _instruments;
+          setTimeout(function () {
+            instruments.launchHandler();
+          }, 5000);
           instruments.start(function (err) {
             should.not.exist(err);
-            done();
           });
         }).done();
+        setTimeout(function () {
+          instruments.didLaunch.should.be.ok;
+          done();
+        },20000);
       });
-
       it('should shutdown', function (done) {
         instruments.shutdown(done);
       });

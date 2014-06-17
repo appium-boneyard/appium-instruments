@@ -4,7 +4,7 @@ var path = require('path'),
     Q = require('q'),
     exec = Q.denodeify(require('child_process').exec);
 
-exports.bootstrap = require('appium-uiauto').prepareBootstrap();
+exports.bootstrap = path.resolve(__dirname, '../assets/bootstrap.js');
 
 exports.getXcodeTraceTemplatePath = function () {
   return exec('xcode-select -print-path').then(function (res) {
