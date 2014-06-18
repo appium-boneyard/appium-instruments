@@ -2,42 +2,29 @@
 
 var base = require('./base'),
     should = base.should,
-    utils = require('../utils/instruments-utils'),
-    path = require('path'),
+    utils = require('../../lib/main').utils,
     exec = require('child_process').exec,
-    Instruments = require('../../lib/main').Instruments,
-    Q = require('q');
+    path = require('path');
 
 describe('intruments tests', function () {
   this.timeout(90000);
 
-  var xcodeTraceTemplatePath,
-      instruments;
+  var instruments;
 
-  beforeEach(function (done) {
-    utils.killAllSimulators()
-    .then(utils.getXcodeTraceTemplatePath)
-    .then(function (_path) { xcodeTraceTemplatePath = _path; })
-    .nodeify(done);
+  beforeEach(function () {
+    return utils.killAllSimulators();
   });
 
   afterEach(function (done) {
     utils.cleanAllTraces().nodeify(done);
   });
 
-  function newInstrument(timeout) {
-    var instruments = new Instruments({
+  function newInstrument(launchTimeout) {
+    return utils.quickInstrument({
       app: path.resolve(__dirname, '../assets/TestApp.app'),
-      bootstrap: utils.bootstrap,
-      template: xcodeTraceTemplatePath,
-      withoutDelay: true,
-      xcodeVersion: '5.1',
-      webSocket: null,
-      launchTimeout: timeout,
-      flakeyRetries: true,
-      logNoColors: false,
+      bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
+      launchTimeout: launchTimeout
     });
-    return new Q(instruments);
   }
 
   function test(desc, timeout) {
@@ -64,7 +51,7 @@ describe('intruments tests', function () {
   }
 
   test('regular timeout', 60000);
-  test('smart timeout', {global: 60000, afterSimLaunch: 10000});
+  //test('smart timeout', {global: 60000, afterSimLaunch: 10000});
 
   describe("shutdown without startup", function () {
     it('should start', function (done) {
