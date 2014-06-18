@@ -1,6 +1,6 @@
 {
   "name": "appium-instruments",
-  "version": "1.1.0-beta1",
+  "version": "1.1.0-beta2",
   "description": "IOS Instruments + instruments-without-delay launcher used by Appium",
   "main": "lib/main.js",
   "scripts": {
