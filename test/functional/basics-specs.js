@@ -4,7 +4,10 @@ var base = require('./base'),
     should = base.should,
     utils = require('../../lib/main').utils,
     exec = require('child_process').exec,
-    path = require('path');
+    path = require('path'),
+    _ =require('underscore'),
+    rimraf = require('rimraf'),
+    fs = require('fs');
 
 describe('intruments tests', function () {
   this.timeout(90000);
@@ -19,43 +22,71 @@ describe('intruments tests', function () {
     utils.cleanAllTraces().nodeify(done);
   });
 
-  function newInstrument(launchTimeout) {
-    return utils.quickInstrument({
+  function newInstrument(opts) {
+    _.extend(opts, {
       app: path.resolve(__dirname, '../assets/TestApp.app'),
       bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
-      launchTimeout: launchTimeout
     });
+    return utils.quickInstrument(opts);
   }
 
-  function test(desc, timeout) {
-    describe(desc, function () {
-      it('should start', function (done) {
-        newInstrument(timeout).then(function (_instruments) {
-          instruments = _instruments;
-          setTimeout(function () {
-            instruments.launchHandler();
-          }, 5000);
-          instruments.start(function (err) {
-            should.not.exist(err);
-          });
-        }).done();
+  function test(opts) {
+    it('should start', function (done) {
+      newInstrument(opts).then(function (_instruments) {
+        instruments = _instruments;
         setTimeout(function () {
-          instruments.didLaunch.should.be.ok;
-          done();
-        },20000);
-      });
-      it('should shutdown', function (done) {
-        instruments.shutdown(done);
-      });
+          instruments.launchHandler();
+        }, 5000);
+        instruments.start(function (err) {
+          should.not.exist(err);
+        });
+      }).done();
+      setTimeout(function () {
+        instruments.didLaunch.should.be.ok;
+        done();
+      },20000);
+    });
+    it('should shutdown', function (done) {
+      instruments.shutdown(done);
     });
   }
 
-  test('regular timeout', 60000);
-  //test('smart timeout', {global: 60000, afterSimLaunch: 10000});
+  describe('regular timeout', function () {
+    test({launchTimeout: 60000});
+  });
+
+  describe('smart timeout', function () {
+    test({launchTimeout: {global: 60000, afterSimLaunch: 10000}});
+  });
+
+  describe("using different tmp dir", function () {
+    it('should start', function (done) {
+      var altTmpDir = '/tmp/abcd';
+      rimraf.sync(altTmpDir);
+      newInstrument({launchTimeout: 60000, tmpDir: altTmpDir}).then(function (_instruments) {
+        instruments = _instruments;
+        instruments.tmpDir.should.equal(altTmpDir);
+        setTimeout(function () {
+          instruments.launchHandler();
+        }, 5000);
+        instruments.start(function (err) {
+          should.not.exist(err);
+          fs.exists('/tmp/abcd').should.be.ok;
+        });
+      }).done();
+      setTimeout(function () {
+        instruments.didLaunch.should.be.ok;
+        done();
+      },20000);
+    });
+    it('should shutdown', function (done) {
+      instruments.shutdown(done);
+    });
+  });
 
   describe("shutdown without startup", function () {
     it('should start', function (done) {
-      newInstrument(60000).then(function (_instruments) {
+      newInstrument({launchTimeout: 60000}).then(function (_instruments) {
         instruments = _instruments;
         instruments.shutdown(function (err) {
           err.should.include('Didn\'t not shutdown within');
@@ -79,7 +110,7 @@ describe('intruments tests', function () {
         if (typeof iosVer !== "number" || isNaN(iosVer)) {
           return onErr();
         }
-        newInstrument(60000).then(function (_instruments) {
+        newInstrument({launchTimeout: 60000}).then(function (_instruments) {
           instruments = _instruments;
           instruments.getAvailableDevices(function (err, devices) {
             should.not.exist(err);
