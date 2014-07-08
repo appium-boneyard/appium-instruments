@@ -3,24 +3,19 @@
 var base = require('./base'),
     should = base.should,
     utils = require('../../lib/main').utils,
+    logger = require('../../lib/main').logger,
     exec = require('child_process').exec,
     path = require('path'),
     _ =require('underscore'),
     rimraf = require('rimraf'),
     fs = require('fs');
 
+if (process.env.VERBOSE) logger.setConsoleLevel('debug');
+
+var LAUNCH_HANDLER_TIMEOUT = 10000;
+
 describe('intruments tests', function () {
   this.timeout(90000);
-
-  var instruments;
-
-  beforeEach(function () {
-    return utils.killAllSimulators();
-  });
-
-  afterEach(function (done) {
-    utils.cleanAllTraces().nodeify(done);
-  });
 
   function newInstrument(opts) {
     _.extend(opts, {
@@ -30,62 +25,116 @@ describe('intruments tests', function () {
     return utils.quickInstrument(opts);
   }
 
-  function test(opts) {
-    it('should start', function (done) {
+  function checkLaunched(instruments, done) {
+    var _checkLaunched = function (remaining) {
+      if (remaining === 0) done(new Error('didn\'t launch'));
+      setTimeout(function () {
+        if (instruments.didLaunch) return done();
+        _checkLaunched(remaining -1);
+      },1000);
+    };
+    _checkLaunched(20);
+  }
+
+  function test(appendDesc , opts, checks) {
+    checks = checks || {};
+    var instruments;
+    it('should start' + appendDesc, function (done) {
+      utils.killAllSimulators();
       newInstrument(opts).then(function (_instruments) {
         instruments = _instruments;
+        if (checks.afterCreate) checks.afterCreate(instruments);
         setTimeout(function () {
           instruments.launchHandler();
-        }, 5000);
-        instruments.start(function (err) {
-          should.not.exist(err);
+        }, LAUNCH_HANDLER_TIMEOUT);
+        instruments.start();
+        checkLaunched(instruments, function (err) {
+          if (err) return done(err);
+          if (checks.afterLaunch) checks.afterLaunch(instruments);
+          done();
         });
       }).done();
-      setTimeout(function () {
-        instruments.didLaunch.should.be.ok;
-        done();
-      },20000);
     });
-    it('should shutdown', function (done) {
+    it('should shutdown' + appendDesc, function (done) {
       instruments.shutdown(done);
     });
   }
 
   describe('regular timeout', function () {
-    test({launchTimeout: 60000});
+    test('', {launchTimeout: 60000});
   });
 
   describe('smart timeout', function () {
-    test({launchTimeout: {global: 60000, afterSimLaunch: 10000}});
+    test('', {launchTimeout: {global: 60000, afterSimLaunch: 10000}});
   });
 
   describe("using different tmp dir", function () {
-    it('should start', function (done) {
-      var altTmpDir = '/tmp/abcd';
+    var altTmpDir = '/tmp/abcd';
+
+    before(function () {
       rimraf.sync(altTmpDir);
-      newInstrument({launchTimeout: 60000, tmpDir: altTmpDir}).then(function (_instruments) {
-        instruments = _instruments;
-        instruments.tmpDir.should.equal(altTmpDir);
-        setTimeout(function () {
-          instruments.launchHandler();
-        }, 5000);
-        instruments.start(function (err) {
-          should.not.exist(err);
-          fs.exists('/tmp/abcd').should.be.ok;
-        });
-      }).done();
-      setTimeout(function () {
-        instruments.didLaunch.should.be.ok;
-        done();
-      },20000);
     });
-    it('should shutdown', function (done) {
-      instruments.shutdown(done);
+
+    test(" (1)", {
+      launchTimeout: {global: 60000, afterSimLaunch: 10000},
+      tmpDir: altTmpDir
+    }, {
+      afterCreate: function (instruments) { instruments.tmpDir.should.equal(altTmpDir); },
+      afterLaunch: function () {
+        fs.existsSync('/tmp/abcd').should.be.ok;
+        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+      }
+    });
+
+    test(" (2)", {
+      launchTimeout: {global: 60000, afterSimLaunch: 10000},
+      tmpDir: altTmpDir
+    }, {
+      afterCreate: function (instruments) { instruments.tmpDir.should.equal(altTmpDir); },
+      afterLaunch: function () {
+        fs.existsSync('/tmp/abcd').should.be.ok;
+        // tmp dir is deleted at startup so trace file is not incremented
+        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+      }
+    });
+  });
+
+  describe("using different trace dir", function () {
+    var altTraceDir = '/tmp/abcd';
+
+    before(function () {
+      rimraf.sync(altTraceDir);
+    });
+
+    test(" (1)", {
+      launchTimeout: {global: 60000, afterSimLaunch: 10000},
+      traceDir: altTraceDir
+    }, {
+      afterCreate: function (instruments) {
+        instruments.tmpDir.should.equal('/tmp/appium-instruments');
+      },
+      afterLaunch: function () {
+        fs.existsSync('/tmp/abcd').should.be.ok;
+        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+      }
+    });
+
+    test(" (2)", {
+      launchTimeout: {global: 60000, afterSimLaunch: 10000},
+      traceDir: altTraceDir
+    }, {
+      afterCreate: function (instruments) { instruments.tmpDir.should.equal('/tmp/appium-instruments'); },
+      afterLaunch: function () {
+        fs.existsSync('/tmp/abcd').should.be.ok;
+        fs.existsSync('/tmp/abcd/instrumentscli1.trace').should.be.ok;
+      }
     });
   });
 
   describe("shutdown without startup", function () {
+    var instruments;
     it('should start', function (done) {
+      utils.killAllSimulators();
       newInstrument({launchTimeout: 60000}).then(function (_instruments) {
         instruments = _instruments;
         instruments.shutdown(function (err) {
@@ -99,6 +148,8 @@ describe('intruments tests', function () {
 
   // works only on 7.1
   describe("getting devices", function () {
+    var instruments;
+    utils.killAllSimulators();
     it('should get all available devices', function (done) {
       exec('xcrun --sdk iphonesimulator --show-sdk-version', function (err, stdout) {
         var onErr = function () {

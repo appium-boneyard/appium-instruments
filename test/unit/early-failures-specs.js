@@ -26,7 +26,7 @@ describe('Early failures', function () {
   });
 
   // TODO: update test or move to uiauto
-  // it.only('should call launch cb on initSocketServer failure', function (done) {
+  // it('should call launch cb on initSocketServer failure', function (done) {
   //   var instruments = new Instruments({});
   //   sinon.stub(instruments, "setInstrumentsPath", asyncCbStub(true, 0));
   //   sinon.stub(instruments, "initSocketServer", asyncCbStub(false, 50));
