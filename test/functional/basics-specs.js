@@ -2,6 +2,7 @@
 
 var base = require('./base'),
     should = base.should,
+    Instruments = require('../../lib/main').Instruments,
     utils = require('../../lib/main').utils,
     logger = require('../../lib/main').logger,
     exec = require('child_process').exec,
@@ -148,7 +149,6 @@ describe('intruments tests', function () {
 
   // works only on 7.1
   describe("getting devices", function () {
-    var instruments;
     utils.killAllSimulators();
     it('should get all available devices', function (done) {
       exec('xcrun --sdk iphonesimulator --show-sdk-version', function (err, stdout) {
@@ -161,19 +161,16 @@ describe('intruments tests', function () {
         if (typeof iosVer !== "number" || isNaN(iosVer)) {
           return onErr();
         }
-        newInstrument({launchTimeout: 60000}).then(function (_instruments) {
-          instruments = _instruments;
-          instruments.getAvailableDevices(function (err, devices) {
-            should.not.exist(err);
-            if (iosVer >= 7.1) {
-              devices.length.should.be.above(0);
-              devices.should.contain("iPhone - Simulator - iOS 7.1");
-            } else {
-              devices.length.should.equal(0);
-            }
-            done();
-          });
-        }).done();
+        Instruments.getAvailableDevices(function (err, devices) {
+          should.not.exist(err);
+          if (iosVer >= 7.1) {
+            devices.length.should.be.above(0);
+            devices.should.contain("iPhone - Simulator - iOS 7.1");
+          } else {
+            devices.length.should.equal(0);
+          }
+          done();
+        });
       });
     });
   });
