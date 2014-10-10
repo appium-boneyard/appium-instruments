@@ -161,7 +161,7 @@ describe('intruments tests', function () {
         if (typeof iosVer !== "number" || isNaN(iosVer)) {
           return onErr();
         }
-        Instruments.getAvailableDevices(function (err, devices) {
+        Instruments.getAvailableDevicesWithRetry(3, function (err, devices) {
           should.not.exist(err);
           if (iosVer >= 7.1) {
             devices.length.should.be.above(0);
