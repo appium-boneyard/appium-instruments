@@ -22,6 +22,7 @@ describe('intruments tests', function () {
     _.extend(opts, {
       app: path.resolve(__dirname, '../assets/TestApp.app'),
       bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
+      simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
     });
     return utils.quickInstrument(opts);
   }
@@ -165,7 +166,7 @@ describe('intruments tests', function () {
           should.not.exist(err);
           if (iosVer >= 7.1) {
             devices.length.should.be.above(0);
-            devices.should.contain("iPhone - Simulator - iOS 7.1");
+            devices.join('\n').should.include("iPhone 6 (8.1 Simulator)");
           } else {
             devices.length.should.equal(0);
           }
