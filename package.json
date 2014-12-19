@@ -28,19 +28,19 @@
   "dependencies": {
     "async": "~0.9.0",
     "through": "~2.3.4",
-    "underscore": "~1.6.0",
+    "underscore": "~1.7.0",
     "uuid-js": "~0.7.4",
     "rimraf": "~2.2.8",
     "mkdirp": "~0.5.0",
-    "winston": "~0.7.3"
+    "winston": "~0.8.3"
   },
   "devDependencies": {
-    "chai": "~1.9.1",
-    "jscs": "~1.5.3",
+    "chai": "~1.10.0",
+    "jscs": "~1.8.1",
     "jshint": "~2.5.1",
-    "mocha": "~1.20.0",
-    "q": "~1.0.1",
-    "sinon": "~1.10.2",
-    "sinon-chai": "~2.5.0"
+    "mocha": "~2.0.1",
+    "q": "~1.1.2",
+    "sinon": "~1.12.2",
+    "sinon-chai": "~2.6.0"
   }
 }
