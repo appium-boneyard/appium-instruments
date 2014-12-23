@@ -25,7 +25,7 @@ clone_iwd:
 
 build_iwd:
 ifndef TRAVIS_BUILD_NUMBER
-	sudo xcode-select -switch "/Applications/Xcode-7.1.app"
+	sudo xcode-select -switch "/Applications/Xcode-8.1.app"
 endif
 	cd tmp/iwd && ./build.sh 
 	sudo xcode-select -switch $(xcode_path)
