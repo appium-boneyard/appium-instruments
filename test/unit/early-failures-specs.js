@@ -2,8 +2,7 @@
 
 var base = require("./base"),
     sinon = base.sinon,
-    Instruments = require('../../lib/main').Instruments,
-    asyncCbStub = require("../utils/stubs").asyncCbStub;
+    Instruments = require('../../lib/main').Instruments;
 
 describe('Early failures', function () {
   var clock;
@@ -13,16 +12,15 @@ describe('Early failures', function () {
 
   it('should call launch cb on setInstrumentsPath failure', function (done) {
     var instruments = new Instruments({});
-    sinon.stub(instruments, "setInstrumentsPath", asyncCbStub(false, 50));
-    var launchCbSpy = sinon.spy();
+    sinon.stub(instruments, "setInstrumentsPath", function (cb) { cb('err'); });
+    var launchCb = function (err) {
+      err.should.exist;
+      unexpectedExitCbSpy.should.not.have.been.called;
+      done();
+    };
     var unexpectedExitCbSpy = sinon.spy();
-    try { instruments.start(launchCbSpy, unexpectedExitCbSpy); } catch (ign) {}
-    clock.tick(49);
-    launchCbSpy.should.not.have.been.called;
-    clock.tick(10);
-    launchCbSpy.should.have.been.calledOnce;
-    unexpectedExitCbSpy.should.not.have.been.called;
-    done();
+
+    instruments.start(launchCb, unexpectedExitCbSpy);
   });
 
   // TODO: update test or move to uiauto
@@ -42,4 +40,3 @@ describe('Early failures', function () {
   // });
 
 });
-
