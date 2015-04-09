@@ -14,6 +14,7 @@ var base = require('./base'),
 if (process.env.VERBOSE) logger.setConsoleLevel('debug');
 
 var LAUNCH_HANDLER_TIMEOUT = 10000;
+var TEMP_DIR = path.resolve(__dirname, 'tmp');
 
 describe('intruments tests', function () {
   this.timeout(90000);
@@ -71,10 +72,19 @@ describe('intruments tests', function () {
   });
 
   describe("using different tmp dir", function () {
-    var altTmpDir = '/tmp/abcd';
+    var altTmpDir = path.resolve(TEMP_DIR, 'abcd');
 
     before(function () {
+      // travis can't write to /tmp, so let's create a tmp directory
+      try {
+        fs.mkdirSync(TEMP_DIR);
+      } catch (e) {}
+
       rimraf.sync(altTmpDir);
+    });
+
+    after(function () {
+      rimraf.sync(TEMP_DIR);
     });
 
     test(" (1)", {
@@ -83,8 +93,8 @@ describe('intruments tests', function () {
     }, {
       afterCreate: function (instruments) { instruments.tmpDir.should.equal(altTmpDir); },
       afterLaunch: function () {
-        fs.existsSync('/tmp/abcd').should.be.ok;
-        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+        fs.existsSync(altTmpDir).should.be.ok;
+        fs.existsSync(path.resolve(altTmpDir, 'instrumentscli0.trace')).should.be.ok;
       }
     });
 
@@ -94,18 +104,27 @@ describe('intruments tests', function () {
     }, {
       afterCreate: function (instruments) { instruments.tmpDir.should.equal(altTmpDir); },
       afterLaunch: function () {
-        fs.existsSync('/tmp/abcd').should.be.ok;
+        fs.existsSync(altTmpDir).should.be.ok;
         // tmp dir is deleted at startup so trace file is not incremented
-        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+        fs.existsSync(path.resolve(altTmpDir, 'instrumentscli0.trace')).should.be.ok;
       }
     });
   });
 
   describe("using different trace dir", function () {
-    var altTraceDir = '/tmp/abcd';
+    var altTraceDir = path.resolve(TEMP_DIR, 'abcd');
 
     before(function () {
+      // travis can't write to /tmp, so let's create a tmp directory
+      try {
+        fs.mkdirSync(TEMP_DIR);
+      } catch (e) {}
+
       rimraf.sync(altTraceDir);
+    });
+
+    after(function () {
+      rimraf.sync(TEMP_DIR);
     });
 
     test(" (1)", {
@@ -116,8 +135,9 @@ describe('intruments tests', function () {
         instruments.tmpDir.should.equal('/tmp/appium-instruments');
       },
       afterLaunch: function () {
-        fs.existsSync('/tmp/abcd').should.be.ok;
-        fs.existsSync('/tmp/abcd/instrumentscli0.trace').should.be.ok;
+        fs.existsSync(altTraceDir).should.be.ok;
+        fs.existsSync(path.resolve(altTraceDir, 'instrumentscli0.trace'))
+          .should.be.ok;
       }
     });
 
@@ -125,10 +145,13 @@ describe('intruments tests', function () {
       launchTimeout: {global: 60000, afterSimLaunch: 10000},
       traceDir: altTraceDir
     }, {
-      afterCreate: function (instruments) { instruments.tmpDir.should.equal('/tmp/appium-instruments'); },
+      afterCreate: function (instruments) {
+        instruments.tmpDir.should.equal('/tmp/appium-instruments');
+      },
       afterLaunch: function () {
-        fs.existsSync('/tmp/abcd').should.be.ok;
-        fs.existsSync('/tmp/abcd/instrumentscli1.trace').should.be.ok;
+        fs.existsSync(altTraceDir).should.be.ok;
+        fs.existsSync(path.resolve(altTraceDir, 'instrumentscli1.trace'))
+          .should.be.ok;
       }
     });
   });
