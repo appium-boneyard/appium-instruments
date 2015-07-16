@@ -1,6 +1,5 @@
 {
-  "laxcomma": false,
-  "strict": true,
+  "laxcomma": true,
   "undef": true,
   "unused": true,
   "trailing": true,
@@ -10,6 +9,8 @@
   "expr": true,
   "white": true,
   "indent": 2,
+  "esnext": true,
+  "experimental": ["asyncawait"],
   "globals": {
     "describe": true,
     "it": true,

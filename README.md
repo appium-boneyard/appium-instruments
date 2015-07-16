@@ -1,25 +1,19 @@
 appium-instruments
-==================
+===================
 
 This module is a wrapper around ios instrument and
 [instruments-without-delay](https://github.com/facebook/instruments-without-delay).
 
 [![Build Status](https://travis-ci.org/appium/appium-instruments.png?branch=master)](https://travis-ci.org/appium/appium-instruments)
 
-## Installing
+## Watch
 
 ```
-npm install  appium-instruments
+npm run watch
 ```
 
-## Usage
-
-TODO
-
-## Publishing
+## Test
 
 ```
-npm version [patch|minor|major]
-git push --tags origin master
-npm publish
+npm test
 ```

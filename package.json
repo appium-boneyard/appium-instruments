@@ -1,48 +1,59 @@
 {
   "name": "appium-instruments",
-  "version": "2.0.4",
   "description": "IOS Instruments + instruments-without-delay launcher used by Appium",
-  "main": "lib/main.js",
-  "scripts": {
-    "test": "make test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/appium/appium-instruments.git"
-  },
   "keywords": [
     "appium",
     "instruments"
   ],
-  "author": "appium committers",
-  "licenses": [
-    {
-      "type": "apache-2.0",
-      "url": "https://raw.github.com/appium/appium/master/LICENSE"
-    }
-  ],
+  "version": "3.0.0-beta",
+  "author": "appium",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appium/appium-instruments.git"
+  },
   "bugs": {
     "url": "https://github.com/appium/appium-instruments/issues"
   },
-  "homepage": "https://github.com/appium/appium-instruments",
+  "engines": [
+    "node"
+  ],
+  "main": "./build/index.js",
+  "bin": {},
+  "directories": {
+    "lib": "lib"
+  },
   "dependencies": {
-    "appium-support": "=1.0.3",
+    "appium-logger": "^1.1.7",
+    "appium-support": "=2.0.0-beta1",
     "appium-xcode": "^2.0.5",
     "async": "~0.9.0",
+    "asyncbox": "^2.0.4",
+    "babel-runtime": "=5.5.5",
+    "bluebird": "^2.9.32",
+    "colors": "^1.1.2",
+    "lodash": "^3.10.0",
+    "mkdirp": "~0.5.0",
+    "rimraf": "~2.2.8",
+    "source-map-support": "^0.3.1",
+    "teen_process": "^1.2.2",
     "through": "~2.3.4",
     "underscore": "~1.7.0",
     "uuid-js": "~0.7.4",
-    "rimraf": "~2.2.8",
-    "mkdirp": "~0.5.0",
     "winston": "~0.8.3"
   },
+  "scripts": {
+    "prepublish": "./node_modules/.bin/gulp prepublish",
+    "test": "./node_modules/.bin/gulp once",
+    "watch": "./node_modules/.bin/gulp"
+  },
   "devDependencies": {
+    "appium-gulp-plugins": "^1.2.12",
+    "appium-test-support": "0.0.5",
     "chai": "^3.0.0",
-    "jscs": "^1.13.1",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
-    "q": "^1.4.1",
-    "sinon": "^1.15.4",
-    "sinon-chai": "^2.8.0"
+    "chai-as-promised": "^5.1.0",
+    "gulp": "^3.8.11",
+    "mochawait": "^2.0.0",
+    "yargs": "^3.10.0"
   }
 }
