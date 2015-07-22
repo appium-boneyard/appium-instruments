@@ -14,7 +14,7 @@ let P = Promise;
 
 describe('Early failures', withSandbox({}, (S) => {
 
-  it('should error on getInstrumentsPath failure', async function () {
+  it('should error on getInstrumentsPath failure', async () => {
     let instruments = new Instruments({});
     S.sandbox.stub(utils, 'getInstrumentsPath').returns(P.reject(new Error('ouch!')));
     let onExitSpy = sinon.spy();
