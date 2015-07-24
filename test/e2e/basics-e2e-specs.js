@@ -10,6 +10,7 @@ import { fs, rimraf } from 'appium-support';
 import { exec } from 'teen_process';
 import { rootDir, getAvailableDevices } from '../../lib/utils';
 import { retry } from 'asyncbox';
+import testAppPath from 'ios-test-app';
 
 chai.should();
 chai.use(chaiAsPromised);
@@ -17,12 +18,12 @@ chai.use(chaiAsPromised);
 var LAUNCH_HANDLER_TIMEOUT = 10000;
 var TEMP_DIR = path.resolve(__dirname, 'tmp');
 
-describe('intruments tests', function () {
+describe('instruments tests', function () {
   this.timeout(90000);
 
   async function newInstrument(opts) {
     _.extend(opts, {
-      app: path.resolve(rootDir, 'test/assets/TestApp.app'),
+      app: path.resolve(__dirname, '../../..', 'node_modules', 'ios-test-app', testAppPath[1]),
       bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
       simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
     });

@@ -35,6 +35,7 @@
     "lodash": "^3.10.0",
     "mkdirp": "~0.5.0",
     "rimraf": "~2.2.8",
+    "sample-apps": "^2.0.1",
     "source-map-support": "^0.3.1",
     "teen_process": "^1.2.2",
     "through": "~2.3.4",
