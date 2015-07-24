@@ -54,6 +54,7 @@
     "chai": "^3.0.0",
     "chai-as-promised": "^5.1.0",
     "gulp": "^3.8.11",
+    "ios-test-app": "^2.1.5",
     "mochawait": "^2.0.0",
     "sinon": "^1.15.4",
     "yargs": "^3.10.0"

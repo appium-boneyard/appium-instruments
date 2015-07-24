@@ -8,7 +8,7 @@ import path from 'path';
 import _ from 'lodash';
 import { fs, rimraf } from 'appium-support';
 import { exec } from 'teen_process';
-import { rootDir, getAvailableDevices } from '../../lib/utils';
+import { getAvailableDevices } from '../../lib/utils';
 import { retry } from 'asyncbox';
 import testAppPath from 'ios-test-app';
 
