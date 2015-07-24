@@ -4,7 +4,7 @@ import { utils } from '..';
 import * as tp from 'teen_process';
 import chai from 'chai';
 import 'mochawait';
-import { withMocks, verify, stubEnv }from 'appium-test-support';
+import { withMocks, verify, stubEnv } from 'appium-test-support';
 import { fs } from 'appium-support';
 chai.should();
 
@@ -97,14 +97,14 @@ describe('utils', () => {
   describe('getIwdPath', withMocks({fs}, (mocks) => {
     it('should work when path is found', async () => {
       mocks.fs.expects('exists').once().returns(P.resolve(true));
-      (await utils.getIwdPath('10.10.10')).should.equal(
-        '/Users/baba/Work/appium-instruments/thirdparty/iwd10');
+      (await utils.getIwdPath('10.10.10')).should.match(
+        /.*appium-instruments.thirdparty.iwd10/);
       verify(mocks);
     });
-    it.only('should work when path is not found', async () => {
+    it('should work when path is not found', async () => {
       mocks.fs.expects('exists').once().returns(P.resolve(false));
-      (await utils.getIwdPath('10.10.10')).should.equal(
-        '/Users/baba/Work/appium-instruments/thirdparty/iwd');
+      (await utils.getIwdPath('10.10.10')).should.match(
+        /.*appium-instruments.thirdparty.iwd/);
       verify(mocks);
     });
   }));
