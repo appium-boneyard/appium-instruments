@@ -27,7 +27,7 @@ describe('instruments tests', function () {
       bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
       simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
     });
-    return await Instruments.quickInstrument(opts);
+    return await Instruments.quickInstruments(opts);
   }
 
   function test(appendDesc , opts, checks) {
