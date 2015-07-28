@@ -23,7 +23,7 @@ describe('instruments tests', function () {
 
   async function newInstrument(opts) {
     _.extend(opts, {
-      app: path.resolve(__dirname, '../../..', 'node_modules', 'ios-test-app', testAppPath[1]),
+      app: path.resolve(__dirname, '..', '..', '..', 'node_modules', 'ios-test-app', testAppPath[1]),
       bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
       simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
     });
