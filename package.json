@@ -30,6 +30,7 @@
     "asyncbox": "^2.0.4",
     "babel-runtime": "=5.8.20",
     "bluebird": "^2.9.32",
+    "colors": "^1.1.2",
     "ios-test-app": "^2.2.6",
     "lodash": "^3.10.0",
     "source-map-support": "^0.3.1",
