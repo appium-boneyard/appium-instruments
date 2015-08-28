@@ -18,7 +18,7 @@ describe('Early failures', withSandbox({}, (S) => {
     let instruments = new Instruments({});
     S.sandbox.stub(utils, 'getInstrumentsPath').returns(P.reject(new Error('ouch!')));
     let onExitSpy = sinon.spy();
-    instruments.on('exit', onExitSpy);
+    instruments.onShutdown.then(onExitSpy, onExitSpy).done();
     await instruments.launch().should.be.rejectedWith(/ouch!/);
     onExitSpy.should.not.have.been.called;
   });
