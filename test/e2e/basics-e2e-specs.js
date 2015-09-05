@@ -151,8 +151,7 @@ describe('instruments tests', function () {
     it('should launch', async function () {
       await utils.killAllSimulators();
       let instruments = await newInstrument({launchTimeout: 60000});
-      // TODO: cleanup this
-      await (instruments.shutdown()).should.be.rejectedWith(/Instruments did not terminate after/);
+      await instruments.shutdown();
     });
   });
 
