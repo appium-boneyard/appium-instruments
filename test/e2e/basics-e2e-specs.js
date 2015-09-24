@@ -1,16 +1,15 @@
 // transpile:mocha
 
-import { Instruments, utils } from '../..';
+import { Instruments } from '../..';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import 'mochawait';
 import path from 'path';
 import _ from 'lodash';
-import { fs, rimraf } from 'appium-support';
+import { killAllSimulators } from 'appium-ios-simulator';
+import { fs } from 'appium-support';
 import { exec } from 'teen_process';
 import { getAvailableDevices } from '../../lib/utils';
 import { retry } from 'asyncbox';
-import testAppPath from 'ios-test-app';
 
 chai.should();
 chai.use(chaiAsPromised);
@@ -21,35 +20,37 @@ var TEMP_DIR = path.resolve(__dirname, 'tmp');
 describe('instruments tests', function () {
   this.timeout(90000);
 
-  async function newInstrument(opts) {
+  async function newInstrument (opts) {
     _.extend(opts, {
-      app: path.resolve(__dirname, '..', '..', '..', 'node_modules', 'ios-test-app', testAppPath[1]),
-      bootstrap: path.resolve(__dirname, '../assets/bootstrap.js'),
+      app: path.resolve(__dirname, '..', '..', '..', 'assets', 'TestApp.app'),
+      bootstrap: path.resolve(__dirname, '..', 'assets', 'bootstrap.js'),
       simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
     });
     return await Instruments.quickInstruments(opts);
   }
 
-  function test(appendDesc , opts, checks) {
+  function test (appendDesc, opts, checks) {
     checks = checks || {};
     let instruments;
 
-    it('should launch' + appendDesc, async () => {
-      await utils.killAllSimulators();
+    it(`should launch${appendDesc}`, async () => {
+      await killAllSimulators();
       instruments = await newInstrument(opts);
       if (checks.afterCreate){
         await checks.afterCreate(instruments);
       }
       setTimeout(function () {
-        if(instruments.launchResultDeferred) {
+        if (instruments.launchResultDeferred) {
           instruments.launchResultDeferred.resolve();
         }
       }, LAUNCH_HANDLER_TIMEOUT);
       await instruments.launch();
-      if (checks.afterLaunch) await checks.afterLaunch(instruments);
+      if (checks.afterLaunch) {
+        await checks.afterLaunch(instruments);
+      }
     });
 
-    it('should shutdown' + appendDesc, async function () {
+    it(`should shutdown${appendDesc}`, async function () {
       await instruments.shutdown();
     });
   }
@@ -71,11 +72,11 @@ describe('instruments tests', function () {
         await fs.mkdir(TEMP_DIR);
       } catch (e) {}
 
-      await rimraf(altTmpDir);
+      await fs.rimraf(altTmpDir);
     });
 
     after(async function () {
-      await rimraf(TEMP_DIR);
+      await fs.rimraf(TEMP_DIR);
     });
 
     test(" (1)", {
@@ -111,11 +112,11 @@ describe('instruments tests', function () {
         await fs.mkdir(TEMP_DIR);
       } catch (e) {}
 
-      await rimraf(altTraceDir);
+      await fs.rimraf(altTraceDir);
     });
 
     after(async function () {
-      await rimraf(TEMP_DIR);
+      await fs.rimraf(TEMP_DIR);
     });
 
     test(" (1)", {
@@ -149,15 +150,16 @@ describe('instruments tests', function () {
 
   describe("shutdown without startup", function () {
     it('should launch', async function () {
-      await utils.killAllSimulators();
+      await killAllSimulators();
       let instruments = await newInstrument({launchTimeout: 60000});
       await instruments.shutdown();
     });
   });
 
-  // works only on 7.1
-  describe("getting devices", function () {
-    before(async () => { await utils.killAllSimulators(); });
+  describe('getting devices', function () {
+    before(async () => {
+      await killAllSimulators();
+    });
 
     it('should get all available devices', async function () {
       let iosVer;
@@ -165,15 +167,15 @@ describe('instruments tests', function () {
         let {stdout} = await exec('xcrun', ['--sdk', 'iphonesimulator', '--show-sdk-version']);
         iosVer = parseFloat(stdout);
       } catch (ign) {}
-      if (typeof iosVer !== "number" || isNaN(iosVer)) {
+      if (_.isNumber(iosVer) || isNaN(iosVer)) {
         // TODO: this is weird
-        console.warn("Couldn't get iOS sdk version, skipping test");
+        console.warn('Could not get iOS sdk version, skipping test');
         return;
       }
       let devices = await retry(3 , getAvailableDevices);
       if (iosVer >= 7.1) {
         devices.length.should.be.above(0);
-        devices.join('\n').should.include("iPhone 6 (8.1 Simulator)");
+        devices.join('\n').should.include('iPhone 6 (8.1');
       } else {
         devices.length.should.equal(0);
       }

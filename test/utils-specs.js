@@ -3,7 +3,6 @@
 import { utils } from '..';
 import * as tp from 'teen_process';
 import chai from 'chai';
-import 'mochawait';
 import { withMocks, verify, stubEnv } from 'appium-test-support';
 import { fs } from 'appium-support';
 chai.should();
@@ -11,31 +10,6 @@ chai.should();
 let P = Promise;
 
 describe('utils', () => {
-  describe('getXcodeTraceTemplatePath', withMocks({tp, fs}, (mocks) => {
-    it('should retrieve .bundle path', async () => {
-      mocks.tp.expects('exec').once().returns(P.resolve(
-        {stdout: '/a/b/c/d\n', stderr:'' }));
-      mocks.fs.expects('open').once().returns(P.resolve({}));
-      mocks.fs.expects('close').once().returns(P.resolve());
-      (await utils.getXcodeTraceTemplatePath()).should.equal(
-        '/a/b/Contents/Applications/Instruments.app/Contents/PlugIns/' +
-        'AutomationInstrument.bundle/Contents/Resources/' +
-        'Automation.tracetemplate');
-      verify(mocks);
-    });
-    it('should retrieve .xrplugin path', async () => {
-      mocks.tp.expects('exec').once().returns(P.resolve(
-        {stdout: '/a/b/c/d\n', stderr:'' }));
-      mocks.fs.expects('open').once().returns(P.reject(new Error('ouch!')));
-      mocks.fs.expects('open').once().returns(P.resolve({}));
-      mocks.fs.expects('close').once().returns(P.resolve());
-      (await utils.getXcodeTraceTemplatePath()).should.equal(
-        '/a/b/Contents/Applications/Instruments.app/Contents/PlugIns/' +
-        'AutomationInstrument.xrplugin/Contents/Resources/' +
-        'Automation.tracetemplate');
-      verify(mocks);
-    });
-  }));
   describe('getInstrumentsPath', withMocks({tp}, (mocks) => {
     it('should retrieve path', async () => {
       mocks.tp.expects('exec').once().returns(P.resolve(
@@ -52,14 +26,6 @@ describe('utils', () => {
         {stdout: 'iphone1\niphone2\niphone3', stderr:'' }));
       (await utils.getAvailableDevices()).should.deep.equal(
         ['iphone1', 'iphone2', 'iphone3']);
-      verify(mocks);
-    });
-  }));
-  describe('killAllSimulators', withMocks({tp}, (mocks) => {
-    it('should work', async () => {
-      mocks.tp.expects('exec').once().returns(P.resolve(
-        {stdout: '', stderr:'' }));
-      await utils.killAllSimulators();
       verify(mocks);
     });
   }));
@@ -97,14 +63,14 @@ describe('utils', () => {
   describe('getIwdPath', withMocks({fs}, (mocks) => {
     it('should work when path is found', async () => {
       mocks.fs.expects('exists').once().returns(P.resolve(true));
-      (await utils.getIwdPath('10.10.10')).should.match(
-        /.*appium-instruments.thirdparty.iwd10/);
+      (await utils.getIwdPath('10')).should.match(
+        /.*thirdparty\/iwd10/);
       verify(mocks);
     });
     it('should work when path is not found', async () => {
       mocks.fs.expects('exists').once().returns(P.resolve(false));
-      (await utils.getIwdPath('10.10.10')).should.match(
-        /.*appium-instruments.thirdparty.iwd/);
+      (await utils.getIwdPath('10')).should.match(
+        /.*thirdparty\/iwd/);
       verify(mocks);
     });
   }));
