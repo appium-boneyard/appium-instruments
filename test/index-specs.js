@@ -2,7 +2,7 @@
 
 import { Instruments, utils } from '..';
 import chai from 'chai';
-import 'mochawait';
+
 
 chai.should();
 

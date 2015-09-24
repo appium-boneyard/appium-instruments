@@ -1,5 +1,4 @@
 import { utils } from '../..';
-import 'mochawait';
 import chai from 'chai';
 
 chai.should();
