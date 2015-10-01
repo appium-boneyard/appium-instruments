@@ -66,7 +66,7 @@ And a number of object methods:
 
 - args - `opts` - an object with values to be set on the newly created object.
   - app
-  - termTimeout - defaults to 3000
+  - termTimeout - defaults to 5000
   - flakeyRetries - defaults to 0
   - udid
   - bootstrap
