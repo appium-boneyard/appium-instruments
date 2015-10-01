@@ -10,12 +10,11 @@ import { withSandbox } from 'appium-test-support';
 
 chai.should();
 chai.use(chaiAsPromised);
-let P = Promise;
 
 describe('Early failures', withSandbox({}, (S) => {
   it('should error on getInstrumentsPath failure', async () => {
     let instruments = new Instruments({});
-    S.sandbox.stub(utils, 'getInstrumentsPath').returns(P.reject(new Error('ouch!')));
+    S.sandbox.stub(utils, 'getInstrumentsPath').returns(Promise.reject(new Error('ouch!')));
     let onExitSpy = sinon.spy();
     instruments.onShutdown.then(onExitSpy, onExitSpy).done();
     await instruments.launch().should.be.rejectedWith(/ouch!/);

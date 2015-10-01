@@ -29,7 +29,7 @@ describe('instruments tests', function () {
     return await Instruments.quickInstruments(opts);
   }
 
-  function test (appendDesc, opts, checks) {
+  function test (appendDesc, opts, checks = {}) {
     checks = checks || {};
     let instruments;
 

@@ -12,3 +12,4 @@ describe('index', () => {
     utils.should.exist;
   });
 });
+
