@@ -1,19 +1,97 @@
-appium-instruments
-===================
-
-This module is a wrapper around ios instrument and
-[instruments-without-delay](https://github.com/facebook/instruments-without-delay).
+## appium-instruments
 
 [![Build Status](https://travis-ci.org/appium/appium-instruments.png?branch=master)](https://travis-ci.org/appium/appium-instruments)
+[![Coverage Status](https://coveralls.io/repos/appium/appium-instruments/badge.svg)](https://coveralls.io/github/appium/appium-instruments)
 
-## Watch
 
-```
-npm run watch
-```
+Wrapper module around iOS [Instruments](https://developer.apple.com/library/watchos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/index.html) and
+[instruments-without-delay](https://github.com/facebook/instruments-without-delay).
 
-## Test
+The module exports two objects: `Instruments` (default) and `utils`.
 
-```
-npm test
-```
+### `utils`
+
+Exposes a number of helper functions.
+
+`rootDir`
+
+- The base of the package, wherever it is installed
+
+`killAllInstruments`
+
+- Kill all `Instruments` processes currently running.
+
+`cleanAllTraces`
+
+- Delete all the trace directories that the system knows of.
+
+`getInstrumentsPath`
+
+- Retrieve the path to the `Instruments` binary.
+
+`getAvailableDevices`
+
+- Retrieve a list of the devices that `Instruments` supports.
+
+`parseLaunchTimeout`
+
+- Get the `launchTimeout` into a standard state. If it is a `String` it is parsed as [JSON](http://www.json.org/). If it is a number, or if the parsed version is a number, it is added to an object as `global` (so that the result is `{global: launchTimeout}`).
+
+`getIwdPath`
+
+- Retrieves the path to the [instruments-without-delay](https://github.com/facebook/instruments-without-delay) binary.
+
+`quickLaunch`
+
+- Launches an instruments test with a default test that immediately passes. In this way we can start a simulator and be notified when it completely launches.
+
+`quickInstruments`
+
+- Factory for making an `Instruments` object with sane defaults.
+
+
+### `Instruments`
+
+This is the main class, exported as default, for the package. Through this class programs can interact with Apple's Instruments program.
+
+The class has one static class method:
+
+`quickInstruments`
+
+- Factory for making an `Instruments` object with sane defaults.
+
+And a number of object methods:
+
+`constructor`
+
+- args - `opts` - an object with values to be set on the newly created object.
+  - app
+  - termTimeout - defaults to 5000
+  - flakeyRetries - defaults to 0
+  - udid
+  - bootstrap
+  - template
+  - withoutDelay
+  - processArguments
+  - simulatorSdkAndDevice
+  - tmpDir - defaults to `/tmp/appium-instruments`
+  - traceDir
+  - launchTimeout - defaults to 90000
+  - webSocket
+  - instrumentsPath
+
+`launchOnce` - async
+
+- Launch Instruments without any retries.
+
+`launch` - async
+
+- Launch Instruments up to `flakeyRetries` (specified in constructor) times.
+
+`spawnInstruments` - async
+
+- Actually launch the Instruments process.
+
+`shutdown` - async
+
+- Cleanly shutdown the currently running Instruments process.

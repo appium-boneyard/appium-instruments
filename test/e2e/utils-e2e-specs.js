@@ -3,7 +3,7 @@ import chai from 'chai';
 
 chai.should();
 
-describe('utils', function() {
+describe('utils', function () {
   this.timeout(90000);
 
   describe('quickLaunch', () => {
