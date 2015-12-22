@@ -6,10 +6,10 @@ JSCS_BIN=./node_modules/.bin/jscs
 DEFAULT: jshint jscs
 
 jshint:
-	@$(JSHINT_BIN) lib test
+	gulp jshint
 
 jscs:
-	@$(JSCS_BIN) lib test
+	@$(JSCS_BIN) build/lib build/test
 
 iwd: clone_iwd build_iwd export_iwd
 
@@ -24,10 +24,7 @@ clone_iwd:
 	git clone https://github.com/facebook/instruments-without-delay.git tmp/iwd
 
 build_iwd:
-ifndef TRAVIS_BUILD_NUMBER
-	sudo xcode-select -switch "/Applications/Xcode-8.1.app"
-endif
-	cd tmp/iwd && ./build.sh 
+	cd tmp/iwd && ./build.sh
 	sudo xcode-select -switch $(xcode_path)
 
 export_iwd:
@@ -35,13 +32,13 @@ export_iwd:
 	mkdir -p thirdparty/iwd
 	cp -R tmp/iwd/build/* thirdparty/iwd
 
-test: test_unit test_functional 
+test: test_unit test_functional
 
 test_unit:
-	./node_modules/.bin/mocha --recursive test/unit
+	gulp once
 
 test_functional:
-	./node_modules/.bin/mocha --recursive test/functional
+	gulp e2e-test
 
 print_env:
 	@echo OS X version: `sw_vers -productVersion`
@@ -49,11 +46,19 @@ print_env:
 	@echo Xcode path: `xcode-select -print-path`
 	@echo Node.js version: `node -v`
 
-travis: 
+travis:
+	make jshint print_env
 ifeq ($(CI_CONFIG),unit)
-	make jshint jscs print_env test_unit
+	gulp once
 else ifeq ($(CI_CONFIG),functional)
-	make jshint jscs print_env authorize iwd test_functional
+	gulp e2e-test
+endif
+
+coverage:
+ifeq ($(CI_CONFIG),unit)
+	gulp coverage
+else ifeq ($(CI_CONFIG),functional)
+	gulp coverage-e2e
 endif
 
 prepublish: jshint jscs iwd test
@@ -64,7 +69,7 @@ clean_trace:
 .PHONY: \
 	DEFAULT \
 	jshint \
-	jscs \	
+	jscs \
 	iwd \
 	clone_iwd \
 	build_iwd \
@@ -74,4 +79,4 @@ clean_trace:
 	prepublish \
 	print_env \
 	clean_trace
-	
+
