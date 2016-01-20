@@ -3,6 +3,8 @@ osx_image: mavericks
 notifications:
   email: false
 env:
+  global:
+    - _FORCE_LOGS=1
   matrix:
     - CI_CONFIG=unit
     - CI_CONFIG=functional
