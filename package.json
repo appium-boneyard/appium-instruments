@@ -19,7 +19,9 @@
     "node"
   ],
   "main": "./build/index.js",
-  "bin": {},
+  "bin": {
+    "xcode-iwd": "./bin/xcode-iwd.sh"
+  },
   "directories": {
     "lib": "lib"
   },
