@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: mavericks
+osx_image: xcode6.4
 notifications:
   email: false
 env:
