@@ -24,7 +24,7 @@ describe('instruments tests', function () {
     _.extend(opts, {
       app: path.resolve(__dirname, '..', '..', '..', 'assets', 'TestApp.app'),
       bootstrap: path.resolve(__dirname, '..', 'assets', 'bootstrap.js'),
-      simulatorSdkAndDevice: 'iPhone 6 (8.1 Simulator)'
+      simulatorSdkAndDevice: 'iPhone 6 (8.4 Simulator)'
     });
     return await Instruments.quickInstruments(opts);
   }
@@ -175,7 +175,7 @@ describe('instruments tests', function () {
       let devices = await retry(3 , getAvailableDevices);
       if (iosVer >= 7.1) {
         devices.length.should.be.above(0);
-        devices.join('\n').should.include('iPhone 6 (8.1');
+        devices.join('\n').should.include('iPhone 6 (8.4');
       } else {
         devices.length.should.equal(0);
       }

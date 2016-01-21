@@ -8,7 +8,7 @@ describe('utils', function () {
 
   describe('quickLaunch', () => {
     it.skip('should terminate', async () => {
-      await utils.quickLaunch("iPhone 6 (8.3 Simulator)");
+      await utils.quickLaunch("iPhone 6 (8.4 Simulator)");
     });
   });
 });
