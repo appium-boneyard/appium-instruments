@@ -20,6 +20,4 @@ describe('Early failures', withSandbox({}, (S) => {
     await instruments.launch().should.be.rejectedWith(/ouch!/);
     onExitSpy.should.not.have.been.called;
   });
-
 }));
-
