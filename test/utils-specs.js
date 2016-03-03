@@ -33,6 +33,20 @@ describe('utils', () => {
   }));
   describe('getAvailableDevices', withMocks({tp}, (mocks) => {
     it('should work', async () => {
+      let instrumentsOutput = `Known Devices:
+INsaikrisv [C8476FF9-9BC4-5E52-AE3D-536A2E85D43B]
+AppiumParallel1 (9.2) [0120C306-95C1-4196-BC13-4196105EBEF9]
+Apple TV 1080p (9.1) [C5957108-6BA4-4A98-9A83-4BED47EFF1BC]
+iPad 2 (8.4) [B45264A0-551C-41A5-A636-8211C05D8003]
+iPad 2 (9.2) [4444EB1E-BA48-4DFA-B16C-777171FCF3BC]
+iPad Air (8.4) [F26279E7-8BAF-4D7B-ABFE-08D1AC364DCF]`;
+      let devices = [
+        'AppiumParallel1 (9.2) [0120C306-95C1-4196-BC13-4196105EBEF9]',
+        'Apple TV 1080p (9.1) [C5957108-6BA4-4A98-9A83-4BED47EFF1BC]',
+        'iPad 2 (8.4) [B45264A0-551C-41A5-A636-8211C05D8003]',
+        'iPad 2 (9.2) [4444EB1E-BA48-4DFA-B16C-777171FCF3BC]',
+        'iPad Air (8.4) [F26279E7-8BAF-4D7B-ABFE-08D1AC364DCF]'
+      ];
       mocks.tp
         .expects('exec')
         .once()
@@ -40,10 +54,9 @@ describe('utils', () => {
       mocks.tp
         .expects('exec')
         .once()
-        .returns(Promise.resolve({stdout: 'iphone1\niphone2\niphone3', stderr:'' }));
-      (await utils.getAvailableDevices()).should.deep.equal(
-        ['iphone1', 'iphone2', 'iphone3']);
-      verify(mocks);
+        .returns(Promise.resolve({stdout: instrumentsOutput, stderr:'' }));
+        (await utils.getAvailableDevices()).should.deep.equal(devices);
+        verify(mocks);
     });
     it('should throw an error when Instruments fails', async () => {
       mocks.tp
