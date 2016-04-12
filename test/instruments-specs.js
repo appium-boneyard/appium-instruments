@@ -104,6 +104,33 @@ describe('instruments', () => {
 
       verify(mocks);
     });
+    it('should properly handle non-environment-variable process arguments', async () => {
+      let instruments = new Instruments({});
+      instruments.processArguments = 'some random process arguments';
+      instruments.xcodeVersion = XCODE_VERSION;
+      instruments.template = '/a/b/c/d/tracetemplate';
+      instruments.instrumentsPath = '/a/b/c/instrumentspath';
+      mocks.fs.expects('exists').once().returns(Promise.resolve(false));
+      mocks.tp.expects('spawn').once()
+        .withArgs(
+          sinon.match(instruments.instrumentsPath),
+          // sinon.match.string,
+          ["-t", "/a/b/c/d/tracetemplate",
+           "-D", "/tmp/appium-instruments/instrumentscli0.trace", undefined,
+           "some random process arguments",
+           "-e", "UIASCRIPT", undefined,
+           "-e", "UIARESULTSPATH", "/tmp/appium-instruments"],
+          sinon.match.object
+        )
+        .returns({});
+      mocks.utils
+        .expects('getIwdPath')
+        .once()
+        .returns(Promise.resolve('/a/b/c/iwd'));
+      await instruments.spawnInstruments();
+
+      verify(mocks);
+    });
     it('should properly handle process arguments as hash', async () => {
       let instruments = new Instruments({});
       instruments.processArguments = {firstoption: 'firstoptionsarg', secondoption: 'second option arg'};
