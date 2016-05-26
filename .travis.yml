@@ -2,6 +2,8 @@ language: objective-c
 osx_image: xcode6.4
 notifications:
   email: false
+node_js:
+  - "0.12"
 env:
   global:
     - _FORCE_LOGS=1
@@ -9,10 +11,6 @@ env:
     - CI_CONFIG=unit
     - CI_CONFIG=functional
 install:
-  - rm -rf ~/.nvm
-  - git clone https://github.com/creationix/nvm.git ~/.nvm
-  - source ~/.nvm/nvm.sh
-  - nvm install 0.12
   - node --version
   - npm install
   - npm install -g gulp jshint
