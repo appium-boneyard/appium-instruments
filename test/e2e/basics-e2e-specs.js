@@ -83,8 +83,8 @@ describe('instruments tests', function () {
       launchTimeout: {global: 60000, afterSimLaunch: 10000},
       tmpDir: altTmpDir
     }, {
-      afterCreate: function (instruments) { instruments.tmpDir.should.equal(altTmpDir); },
-      afterLaunch: async function () {
+      afterCreate: (instruments) => { instruments.tmpDir.should.equal(altTmpDir); },
+      afterLaunch: async () => {
         (await fs.exists(altTmpDir)).should.be.ok;
         (await fs.exists(path.resolve(altTmpDir, 'instrumentscli0.trace'))).should.be.ok;
       }
@@ -123,10 +123,10 @@ describe('instruments tests', function () {
       launchTimeout: {global: 60000, afterSimLaunch: 10000},
       traceDir: altTraceDir
     }, {
-      afterCreate: function (instruments) {
+      afterCreate: (instruments) => {
         instruments.tmpDir.should.equal('/tmp/appium-instruments');
       },
-      afterLaunch: async function () {
+      afterLaunch: async () => {
         (await fs.exists(altTraceDir)).should.be.ok;
         (await fs.exists(path.resolve(altTraceDir, 'instrumentscli0.trace')))
           .should.be.ok;
@@ -137,10 +137,10 @@ describe('instruments tests', function () {
       launchTimeout: {global: 60000, afterSimLaunch: 10000},
       traceDir: altTraceDir
     }, {
-      afterCreate: function (instruments) {
+      afterCreate: (instruments) => {
         instruments.tmpDir.should.equal('/tmp/appium-instruments');
       },
-      afterLaunch: async function () {
+      afterLaunch: async () => {
         (await fs.exists(altTraceDir)).should.be.ok;
         (await fs.exists(path.resolve(altTraceDir, 'instrumentscli1.trace')))
           .should.be.ok;
@@ -168,11 +168,10 @@ describe('instruments tests', function () {
         iosVer = parseFloat(stdout);
       } catch (ign) {}
       if (_.isNumber(iosVer) || isNaN(iosVer)) {
-        // TODO: this is weird
-        console.warn('Could not get iOS sdk version, skipping test');
-        return;
+        console.warn('Could not get iOS sdk version, skipping test'); // eslint-disable-line no-console
+        this.skip();
       }
-      let devices = await retry(3 , getAvailableDevices);
+      let devices = await retry(3, getAvailableDevices);
       if (iosVer >= 7.1) {
         devices.length.should.be.above(0);
         devices.join('\n').should.include('iPhone 6 (8.4');
