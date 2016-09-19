@@ -1,7 +1,6 @@
 // transpile:mocha
 
-import { Instruments } from '..';
-import { utils } from '..';
+import { Instruments, utils } from '..';
 import * as tp from 'teen_process';
 import chai from 'chai';
 import xcode from 'appium-xcode';

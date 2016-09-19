@@ -55,8 +55,8 @@ iPad Air (8.4) [F26279E7-8BAF-4D7B-ABFE-08D1AC364DCF] (Simulator)`;
         .expects('exec')
         .once()
         .returns(Promise.resolve({stdout: instrumentsOutput, stderr:'' }));
-        (await utils.getAvailableDevices()).should.deep.equal(devices);
-        verify(mocks);
+      (await utils.getAvailableDevices()).should.deep.equal(devices);
+      verify(mocks);
     });
     it('should work for Xcode 7.0-7.2', async () => {
       let instrumentsOutput = `Known Devices:
@@ -81,8 +81,8 @@ iPad Air (8.4) [F26279E7-8BAF-4D7B-ABFE-08D1AC364DCF]`;
         .expects('exec')
         .once()
         .returns(Promise.resolve({stdout: instrumentsOutput, stderr:'' }));
-        (await utils.getAvailableDevices()).should.deep.equal(devices);
-        verify(mocks);
+      (await utils.getAvailableDevices()).should.deep.equal(devices);
+      verify(mocks);
     });
     it('should work for Xcode 6', async () => {
       let instrumentsOutput = `Known Devices:
@@ -105,8 +105,8 @@ iPad Air (8.2 Simulator) [F26279E7-8BAF-4D7B-ABFE-08D1AC364DCF]`;
         .expects('exec')
         .once()
         .returns(Promise.resolve({stdout: instrumentsOutput, stderr:'' }));
-        (await utils.getAvailableDevices()).should.deep.equal(devices);
-        verify(mocks);
+      (await utils.getAvailableDevices()).should.deep.equal(devices);
+      verify(mocks);
     });
     it('should throw an error when Instruments fails', async () => {
       mocks.tp
