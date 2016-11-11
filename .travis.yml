@@ -1,9 +1,11 @@
-language: objective-c
-osx_image: xcode6.4
+language: node_js
+os: osx
+osx_image: xcode73
 notifications:
   email: false
 node_js:
-  - "0.12"
+  - "4"
+  - "6"
 env:
   global:
     - _FORCE_LOGS=1
