@@ -24,7 +24,7 @@ describe('instruments tests', function () {
     _.extend(opts, {
       app: path.resolve(__dirname, '..', '..', '..', 'assets', 'TestApp.app'),
       bootstrap: path.resolve(__dirname, '..', 'assets', 'bootstrap.js'),
-      simulatorSdkAndDevice: 'iPhone 6 (8.4 Simulator)'
+      simulatorSdkAndDevice: 'iPhone 6 (9.3)'
     });
     return await Instruments.quickInstruments(opts);
   }
