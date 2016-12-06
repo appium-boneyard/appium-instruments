@@ -3,9 +3,10 @@
 [![Build Status](https://travis-ci.org/appium/appium-instruments.png?branch=master)](https://travis-ci.org/appium/appium-instruments)
 [![Coverage Status](https://coveralls.io/repos/appium/appium-instruments/badge.svg)](https://coveralls.io/github/appium/appium-instruments)
 
-
 Wrapper module around iOS [Instruments](https://developer.apple.com/library/watchos/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/index.html) and
 [instruments-without-delay](https://github.com/facebook/instruments-without-delay).
+
+*Note*: Issue tracking for this repo has been disabled. Please use the [main Appium issue tracker](https://github.com/appium/appium/issues) instead.
 
 The module exports two objects: `Instruments` (default) and `utils`.
 
