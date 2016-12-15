@@ -158,5 +158,35 @@ describe('instruments', () => {
 
       verify(mocks);
     });
+    it('should add language and locale arguments when appropriate', async () => {
+      let instruments = new Instruments({locale: "de_DE", language: "de"});
+      instruments.processArguments = 'some random process arguments';
+      instruments.xcodeVersion = XCODE_VERSION;
+      instruments.template = '/a/b/c/d/tracetemplate';
+      instruments.instrumentsPath = '/a/b/c/instrumentspath';
+      mocks.fs.expects('exists').once().returns(Promise.resolve(false));
+      mocks.tp.expects('spawn').once()
+        .withArgs(
+          sinon.match(instruments.instrumentsPath),
+          // sinon.match.string,
+          ["-t", "/a/b/c/d/tracetemplate",
+           "-D", "/tmp/appium-instruments/instrumentscli0.trace", undefined,
+           "some random process arguments",
+           "-e", "UIASCRIPT", undefined,
+           "-e", "UIARESULTSPATH", "/tmp/appium-instruments",
+           "-AppleLanguages (de)",
+           "-NSLanguages (de)",
+           "-AppleLocale de_DE"],
+          sinon.match.object
+        )
+        .returns({});
+      mocks.utils
+        .expects('getIwdPath')
+        .once()
+        .returns(Promise.resolve('/a/b/c/iwd'));
+      await instruments.spawnInstruments();
+
+      verify(mocks);
+    });
   }));
 });
